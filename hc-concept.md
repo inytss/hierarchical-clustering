@@ -8,7 +8,7 @@ Menurut Tan,PN dalam bukunya yang berjudul *Introduction to Data Mining*, metode
 
 ![](image/partitional.png)
 
-Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu diagram hirarkis (*dendrogram*) dengan tujuan menunjukkan kemiripan antar data[^2]. Setiap data yang mirip akan memiliki hubungan hirarkis yang dekat, dan dendogram terus terbentuk hingga dihasilkan satu kelompok besar. Cluster dapat dihasilkan dengan memotong struktur hirarkis pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu **single linkage**, **complete linkage**, **average linkage**, dan **ward's minimum variance**.
+Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu bagan hirarki (**dendrogram**) dengan tujuan menunjukkan kemiripan antar data[^2]. Setiap data yang mirip akan memiliki hubungan hirarkis yang dekat, dan dendogram terus terbentuk hingga dihasilkan satu kelompok besar. Cluster dapat dihasilkan dengan memotong struktur hirarkis pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu single linkage, complete linkage, average linkage, dan ward's minimum variance.
 
 ![](image/hc.png)
 
@@ -16,7 +16,7 @@ Pada kesempatan kali ini kita akan mendalami terkait Hierarchical Clustering ser
 
 # Hierarchical Clustering
 
-Secara umum, hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^3]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokkannya dalam bentuk bagan hirarki, menggunakan bottom-up atau top-down manner.
+Secara umum, hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^3]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokan data hingga membentuk bagan hirarki (dendogram), menggunakan bottom-up atau top-down manner.
 
 1. **Agglomerative clustering** 
 
@@ -34,7 +34,7 @@ Selain memahami proses pembuatan dendogramnya, mari coba memahami bagaimana node
 
 Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
 
-Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3]. Bacaan lebih lanjut tentang beragam tipe distance matrix dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html).
+Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3].
 
 Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster observasi sehingga dapat terbentuk dendogram dari cluster-cluster yang ada. Proses penggabungan cluster-cluster kecil menjadi satu dendogram utuh dilakukan menggunakan **linkage method**. Berikut ini beberapa jenis linkage method yang sering digunakan:
 
@@ -86,14 +86,21 @@ $$d_{12} = d(\bar X, \bar Y)$$
 
 ## Ward's Minimum Variance
 
-Perhitungan (dis)similarity atau jarak antar cluster dengan meminimalkan nilai variansi total within-cluster. Setiap cluster yang memiliki jarak minimum antar clusternya akan digabungkan menjadi satu menjadi sebuah dendrogram
-
+Perhitungan (dis)similarity atau jarak antar cluster dengan meminimalkan nilai variansi total within-cluster. Setiap cluster yang memiliki jarak minimum antar clusternya akan digabungkan menjadi satu menjadi sebuah dendrogram.
 
 Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
 ![](image/linkage.png)
 
+# Dendogram & Interpretation
+
+Clustering pada umumnya membutuhkan pengguna untuk menentukan jumlah optimal cluster yang terbentuk (nilai `k`). Namun, pada hierarchical clustering hal tersebut tidak diwajibkannya[^2]. Hal ini berangkat dari tujuan awal hierarchical clustering yang fokus pada mengetahui kedekatan antar data (bukan mengetahui partisi antar data). Oleh karena itu, penting untuk kita dapat menginterpretasikan dendogram yang terbentuk.
+
+[!]Paragraf cara interpretasi, hubungannya dari distance measure
+
 # Cluster Analysis
+
+Meskipun kita tidak diwajibkan untuk menentukan nilai `k` (jumlah cluster yang ingin dibentuk), terdapat beberapa hal yang perlu diperhatikan dari cluster-cluster yang terbentuk pada dendogram. 
 
 Dalam analisis cluster, akan sangat mungkin kita memperoleh cluster yang hanya memiliki 1 atau sedikit anggota saja sehingga menyebabkan banyaknya cluster yang terbentuk. Ketika hal tersebut terjadi, kita perlu melakukan pengecekan kembali pada data yang kita miliki. Hal ini bisa disebabkan karena adanya data yang cukup berbeda dengan yang lainnya atau bisa disebut sebagai outlier / anomali. Data yang seperti ini akan menyebabkan adanya cluster yang memiliki 1 anggota.
 
@@ -103,47 +110,25 @@ Untuk mendapatkan banyak cluster yang optimum, berikut beberapa cara yang dapat 
 - membuat cluster dendrogram menggunakan beberapa metode
 - pilih banyaknya cluster yang telah diindentifikasi pada masing-masing metode berdasarkan breakpoint jarak pada dendrogram
 
-## Clustering Model
+[!]optimal cluster pkai 3 metode perlu dimasukkin g ya?
 
-Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan  yaitu `hclust()`.  `hclust` akan meminta distance matrix sebagai inputnya. Distance matrix adalah nilai jarak berpasangan antar masing-masing data. Ukuran pengukuran jarak yang biasa digunakan yaitu *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain. 
+# Clustering Model
 
-# Optimal Cluster
+Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan yaitu `hclust()`.  `hclust` akan meminta distance matrix sebagai inputnya. Distance matrix adalah nilai jarak berpasangan antar masing-masing data. Ukuran pengukuran jarak yang biasa digunakan yaitu *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis. Bacaan lebih lanjut tentang beragam tipe distance matrix dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html).
 
-Setelah memahami bagaimana suatu hierarchical clustering dibuat, ada baiknya kita mengetahui parameter suatu hierarchical clustering dianggap baik, atau bagaiamana cara membuat cluster terbaik.
+# Hierarchical Clustering Application
 
-Pada kasus hierarchical clustering, kita dapat menentukan di level dendogram atau (dis)imilarity berapa akan dilakukan pemisahan sehingga terbentuk sebanyak `k` jumlah cluster.
+Keunggulan dari hierarchical clustering yang tidak dimiliki oleh metode clustering lain adalah dapat membuat struktur hirarkis (dendogram) yang merepresentasikan kedekatan antar data. Hal ini amat bermanfaat khususnya ketika kita ingin melakukan analisis network/komunitas yang khusus ingin mengetahui kedekatan antar data/deteksi data dari suatu komunitas. Oleh karena itu hierarchical clustering banyak dilakukan pada kasus-kasus berikut:
 
-Seperti halnya metode clustering lain, kebaikan cluster dapat dilihat dari seberapa mirip observasi yang berada dalam 1 cluster, dan seberapa berbeda observasi yang berasal dari clusster berbeda setelah percobaan beberapa nilai `k`. Secara umum terdapat 3 metode yang dapat digunakan:
+1. [Social Network Community Detection](https://www.hindawi.com/journals/complexity/2017/3719428/)
+2. [Analisis Evolusi Mahluk Hidup - Biodiversity of Butterflies](https://www.floridamuseum.ufl.edu/science/at-last-butterflies-get-a-bigger-better-evolutionary-tree/)
+3. [Analisis Penyebaran Penyakit - Nextrain for COVID19 Tracking](https://academic.oup.com/bioinformatics/article/34/23/4121/5001388)
 
-1. **Elbow Method**
-2. **Average Silhouette Method**
-3. **Gap Statistic Method**
+Kasus yang berbeda akan menggunakan beberapa setting yang berbeda dalam pembuatan hierarchical clustering. Berikut adalah beberapa pertimbangannya:
 
-## Elbow Method
-
-Nilai kemiripan data antar cluster dapat diwakilkan dengan nilai **total within-cluster sum of square** (Total WSS). Total WSS dapat diartikan sebagai jumlah dari jarak tiap observasi cluster ke nilai tengahnya (centroid). 
-
-[Rumus/intuisi rumus?]
-
-Nilai yang semakin rendah (mendekati nol) mengindikasikan antar data dalam satu cluster semakin mirip. Dapat dilakukan penghitungan total WSS untuk tiap jumlah cluster `k`. Kemudian ditentukan nilai `k` berdasarkan titik yang dimana ketika `k` ditambahkan, maka Total WSS tidak mengalami penurunan yang besar/cenderung landai.
-
-[gambar]
-
-## Average Silhouette Method
-
-Nilai Silhouette adalah ukuran seberapa mirip suatu data dengan clusternya sendiri (kohesi) dibandingkan dengan cluster lain (separasi).
-
-[Rumus/intuisi rumus?]
-
-Nilai silhouette berkisar antara ???1 hingga +1. Nilai yang tinggi menunjukkan bahwa data-data sudah serupa dengan clusternya sendiri dan tidak mirip dengan cluster lain. Jika sebagian besar data memiliki nilai silhouette yang tinggi, maka konfigurasi pengelompokan sudah sesuai, bila banyak yang memiliki nilai rendah, maka konfigurasi pengelompokan belum sesuai (jumlah `k` terlalu banyak atau terlalu sedikit).
-
-[gambar]
-
-## Gap Statistic Method
-
-
-
-Penjelasan lebih detail dapat dibaca [disini](https://uc-r.github.io/kmeans_clustering#optimal).
+* Distance Matrix apa yang sebaiknya digunakan?
+* Linkage Method apa yang sebaiknya digunakan?
+* Pada titik apa dilakukan pemotongan dendogram sehingga didapatkan cluster yang terbaik? [!]recheck
 
 # Reference
 
