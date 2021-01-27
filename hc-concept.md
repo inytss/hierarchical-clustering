@@ -46,19 +46,66 @@ Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi
 
 ## Complete/Maximum Linkage
 
-Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda (**pairwise distances**). Kemudian, jarak paling tinggi (maximum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendogram yang terbentuk menjadi lebih terpisah antar clusternya (terbentuk cluster yang "compact").
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda (**pairwise distances**). Kemudian, jarak paling tinggi (maximum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendrogram yang terbentuk menjadi lebih terpisah antar clusternya (terbentuk cluster yang "compact").
+
+Berikut formula jarak antar cluster menggunakan complete linkage:
+
+$$d_{12} = \max_{ij} d(X_i, Y_j)$$
+
+di mana:
+
+* $X_1, X_2, ..., X_k$ : observasi pada cluster 1
+* $Y_1, Y_2, ..., Y_k$ : observasi pada cluster 2
+* $d(X, Y)$ : jarak antara data pada cluster 1 dengan data pada cluster 2
 
 ## Single/Minimum Linkage
 
-Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, jarak paling kecil (minimum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendogram yang terbentuk menjadi lebih "loose" atau berdekatan antar clusternya.
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, jarak paling kecil (minimum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendrogram yang terbentuk menjadi lebih "loose" atau berdekatan antar clusternya.
+
+Berikut formula jarak antar cluster menggunakan single linkage:
+
+$$d_{12} = \min_{ij} d(X_i, Y_j)$$
+
 
 ## Average Linkage
 
 Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, dihitung rata-rata jarak dari pairwise distance tersebut dan nilai tersebut akan menjadi ukuran (dis)similarity antar cluster.
 
+Berikut formula jarak antar cluster menggunakan average linkage:
+
+$$d_{12} = \frac{1}{kl} \sum_{i=1}^{k}\sum_{j=1}^{l} d(X_i, Y_j)$$
+
+
+## Centroid Linkage
+
+Perhitungan (dis)similarity atau jarak antar cluster dilakukan dengan mengukur jarak antar centroid pada dua cluster. Perhitungan centroid disini menggunakan rata-rata pada suatu variabel x. Dendogram yang akan terbentuk adalah berdasarkan cluster yang memiliki jarak centroid paling kecil.
+
+Berikut formula jarak antar cluster menggunakan centroid linkage:
+
+$$d_{12} = d(\bar X, \bar Y)$$
+
+## Ward's Minimum Variance
+
+Perhitungan (dis)similarity atau jarak antar cluster dengan meminimalkan nilai variansi total within-cluster. Setiap cluster yang memiliki jarak minimum antar clusternya akan digabungkan menjadi satu menjadi sebuah dendrogram
+
+
 Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
 ![](image/linkage.png)
+
+# Cluster Analysis
+
+Dalam analisis cluster, akan sangat mungkin kita memperoleh cluster yang hanya memiliki 1 atau sedikit anggota saja sehingga menyebabkan banyaknya cluster yang terbentuk. Ketika hal tersebut terjadi, kita perlu melakukan pengecekan kembali pada data yang kita miliki. Hal ini bisa disebabkan karena adanya data yang cukup berbeda dengan yang lainnya atau bisa disebut sebagai outlier / anomali. Data yang seperti ini akan menyebabkan adanya cluster yang memiliki 1 anggota.
+
+Untuk mendapatkan banyak cluster yang optimum, berikut beberapa cara yang dapat dilakukan:
+
+- menghitung jarak antar masing-masing data
+- membuat cluster dendrogram menggunakan beberapa metode
+- pilih banyaknya cluster yang telah diindentifikasi pada masing-masing metode berdasarkan breakpoint jarak pada dendrogram
+
+## Clustering Model
+
+Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan  yaitu `hclust()`.  `hclust` akan meminta distance matrix sebagai inputnya. Distance matrix adalah nilai jarak berpasangan antar masing-masing data. Ukuran pengukuran jarak yang biasa digunakan yaitu *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain. 
 
 # Optimal Cluster
 
