@@ -20,11 +20,11 @@ Secara umum, dalam hierarchical clustering dibagi menjadi dua jenis yaitu *agglo
 
 1. **Agglomerative clustering** 
 
-Agglomerative clustering biasa disebut juga sebagai agglomerative nesting (AGNES) dimana cara kerja dalam melakukan pengelompokan hirarki menggunakan bottom-up manner. Prosesnya setiap data akan disebut sebagai 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja, lalu pada tahap selanjutnya dua cluster yang memiliki kemiripan akan dikelompokkan menjadi 1 cluster yang lebih besar (nodes). Proses ini akan dilakukan terus menerus hingga semua data menjadi satu cluster besar (root). 
+Agglomerative clustering biasa disebut juga sebagai agglomerative nesting (AGNES) dimana cara kerja dalam melakukan pengelompokan hirarki menggunakan **bottom-up manner**. Prosesnya dimulai dengan menganggap setiap data sebagai 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja, lalu pada tahap selanjutnya dua cluster yang memiliki kemiripan akan dikelompokkan menjadi 1 cluster yang lebih besar (nodes). Proses ini akan dilakukan terus menerus hingga semua data menjadi satu cluster besar (root). 
 
 2. **Divisive hierarchical clustering**
 
-Divisive hierarchical clustering biasa disebut juga sebagai divisive analysis (DIANA) dimana cara kerja dalam mengelompokkan data menggunakan top-down manner. Prosesnya suatu data akan dianggap menjadi satu cluster besar (root), lalu dalam setiap iterasinya setiap data yang memiliki karakteristik yang berbeda akan dipecah menjadi 2 cluster yang lebih kecil (nodes) dan proses akan terus berjalan hingga setiap data menjadi 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja.
+Divisive hierarchical clustering biasa disebut juga sebagai divisive analysis (DIANA) dimana cara kerja dalam mengelompokkan data menggunakan **top-down manner**. Prosesnya dimulai dengan menganggap satu set data sebagai satu cluster besar (root), lalu dalam setiap iterasinya setiap data yang memiliki karakteristik yang berbeda akan dipecah menjadi 2 cluster yang lebih kecil (nodes) dan proses akan terus berjalan hingga setiap data menjadi 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja.
 
 Berikut ini perbedaan cara kerja agglomerative dan divisive clustering bekerja.
 
@@ -32,9 +32,11 @@ Berikut ini perbedaan cara kerja agglomerative dan divisive clustering bekerja.
 ![](image/agnes-vs-diana.png)
 </center>
 
-Tujuan dari clustering sendiri baik hierarchical maupun partitional clustering yaitu untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster namun memiliki karakteristik yang cukup berbeda antar clusternya. Konsep inilah yang mengharuskan dalam membuat cluster dalam memperhatikan (dis)similarity antar clusternya. Untuk menghitung tingkat (dis)similarity antar anggota cluster yaitu dengan melakukan perhitungan jarak (euclidean distance, manhattan, dst). 
+Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
 
-Dalam hierarchical clustering karena proses dalam membuat cluster yaitu dengan membandingkan antar 2 observasi cluster. Proses perhitungan (dis)similarity pada hierarchical clustering biasanya menggunakan linkage method. Berikut ini beberapa jenis linkage method yang sering digunakan:
+Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan jarak (atau beberapa menyebutnya *distance matrix*). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^2].
+
+Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster observasi sehingga dapat terbentuk dendogram dari cluster-cluster yang ada. Proses penggabungan cluster-cluster kecil menjadi satu dendogram utuh dilakukan menggunakan **linkage method**. Berikut ini beberapa jenis linkage method yang sering digunakan:
 
 1. **Complete Linkage** / **Maximum Linkage**
 2. **Single Linkage** / **Minimum Linkage**
