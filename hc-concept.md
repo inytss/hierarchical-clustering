@@ -6,11 +6,7 @@ Menurut Tan,PN dalam bukunya yang berjudul *Introduction to Data Mining*, metode
 
 **Partitional Clustering** umumnya bertujuan untuk mengelompokkan data menjadi beberapa cluster yang lebih kecil[^2]. Pada prosesnya, setiap cluster akan memiliki titik pusat cluster (centroid) dan mencoba menghitung setiap data yang paling dekat dengan centroid tersebut. Metode dalam partitional clustering diantaranya k-means, fuzzy k-means, dan mixture modelling.
 
-<center>
-
 ![](image/partitional.png)
-
-</center>
 
 Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu diagram hirarkis (*dendrogram*) dengan tujuan menunjukkan kemiripan antar data[^2]. Setiap data yang mirip akan memiliki hubungan hirarkis yang dekat, dan dendogram terus terbentuk hingga dihasilkan satu kelompok besar. Cluster dapat dihasilkan dengan memotong struktur hirarkis pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu **single linkage**, **complete linkage**, **average linkage**, dan **ward's minimum variance**.
 
@@ -20,7 +16,7 @@ Pada kesempatan kali ini kita akan mendalami terkait Hierarchical Clustering ser
 
 # Hierarchical Clustering
 
-Secara umum, dalam hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^3]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokkannya dalam bentuk bagan hirarki, menggunakan bottom-up atau top-down manner.
+Secara umum, hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^3]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokkannya dalam bentuk bagan hirarki, menggunakan bottom-up atau top-down manner.
 
 1. **Agglomerative clustering** 
 
@@ -34,6 +30,8 @@ Berikut ini perbedaan cara kerja agglomerative dan divisive clustering bekerja.
 
 ![](image/agnes-vs-diana.png)
 
+Selain memahami proses pembuatan dendogramnya, mari coba memahami bagaimana node-node (tiap cluster) terbuat dan digabungkan.
+
 Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
 
 Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3].
@@ -45,10 +43,6 @@ Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi
 3. **Average Linkage**
 4. **Centroid Linkage**
 5. **Ward's minimum Variance**
-
-Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
-
-![](image/linkage.png)
 
 ## Complete/Maximum Linkage
 
@@ -62,6 +56,9 @@ Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur te
 
 Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, dihitung rata-rata jarak dari pairwise distance tersebut dan nilai tersebut akan menjadi ukuran (dis)similarity antar cluster.
 
+Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
+
+![](image/linkage.png)
 
 # Reference
 
@@ -71,5 +68,5 @@ Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur te
 
 [^3]: University of Cincinnati Business Analytics. UC Business Analytics R Programming Guide, Bab [Hierarchical Clustering](https://uc-r.github.io/hc_clustering)
 
-[^4]: Rhys, H.I. (2020) [**Machine Learning with R, the tidyverse, and mlr**](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-17/). USA: Manning Publications Co.
+[^4]: Rhys, H.I. (2020) [Machine Learning with R, the tidyverse, and mlr](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-17/). USA: Manning Publications Co.
 
