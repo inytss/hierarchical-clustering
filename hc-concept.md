@@ -4,11 +4,15 @@ Clustering merupakan salah satu metode yang termasuk kedalam unsupervised learni
 
 Menurut Tan,PN dalam bukunya yang berjudul *Introduction to Data Mining*, metode clustering dibagi menjadi dua jenis, yaitu Hierarchical Clustering dan Partitional Clustering[^1]. 
 
-**Partitional Clustering** umumnya bertujuan untuk mengelompokkan data menjadi beberapa cluster yang lebih kecil (Ana, et al. 2000). Pada prosesnya, setiap cluster akan memiliki titik pusat cluster (centroid) dan mencoba menghitung setiap data yang paling dekat dengan centroid tersebut. Metode dalam partitional clustering diantaranya k-means, fuzzy k-means, dan mixture modelling.
+**Partitional Clustering** umumnya bertujuan untuk mengelompokkan data menjadi beberapa cluster yang lebih kecil[^2]. Pada prosesnya, setiap cluster akan memiliki titik pusat cluster (centroid) dan mencoba menghitung setiap data yang paling dekat dengan centroid tersebut. Metode dalam partitional clustering diantaranya k-means, fuzzy k-means, dan mixture modelling.
+
+<center>
 
 ![](image/partitional.png)
 
-Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu diagram hirarkis (*dendrogram*) dengan tujuan menunjukkan kemiripan antar data. Setiap data yang mirip akan memiliki hubungan hirarkis yang dekat, dan dendogram terus terbentuk hingga dihasilkan satu kelompok besar. Cluster dapat dihasilkan dengan memotong struktur hirarkis pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu **single linkage**, **complete linkage**, **average linkage**, dan **ward's minimum variance**.
+</center>
+
+Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu diagram hirarkis (*dendrogram*) dengan tujuan menunjukkan kemiripan antar data[^2]. Setiap data yang mirip akan memiliki hubungan hirarkis yang dekat, dan dendogram terus terbentuk hingga dihasilkan satu kelompok besar. Cluster dapat dihasilkan dengan memotong struktur hirarkis pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu **single linkage**, **complete linkage**, **average linkage**, dan **ward's minimum variance**.
 
 ![](image/hc.png)
 
@@ -16,7 +20,7 @@ Pada kesempatan kali ini kita akan mendalami terkait Hierarchical Clustering ser
 
 # Hierarchical Clustering
 
-Secara umum, dalam hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^2]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokkannya dalam bentuk bagan hirarki, menggunakan bottom-up atau top-down manner.
+Secara umum, dalam hierarchical clustering dibagi menjadi dua jenis yaitu *agglomerative* dan *divisive*[^3]. Kedua metode ini dibedakan berdasarkan cara dalam melakukan pengelompokkannya dalam bentuk bagan hirarki, menggunakan bottom-up atau top-down manner.
 
 1. **Agglomerative clustering** 
 
@@ -28,13 +32,11 @@ Divisive hierarchical clustering biasa disebut juga sebagai divisive analysis (D
 
 Berikut ini perbedaan cara kerja agglomerative dan divisive clustering bekerja.
 
-<center>
 ![](image/agnes-vs-diana.png)
-</center>
 
 Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
 
-Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan jarak (atau beberapa menyebutnya *distance matrix*). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^2].
+Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3].
 
 Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster observasi sehingga dapat terbentuk dendogram dari cluster-cluster yang ada. Proses penggabungan cluster-cluster kecil menjadi satu dendogram utuh dilakukan menggunakan **linkage method**. Berikut ini beberapa jenis linkage method yang sering digunakan:
 
@@ -44,10 +46,30 @@ Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi
 4. **Centroid Linkage**
 5. **Ward's minimum Variance**
 
+Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
- 
+![](image/linkage.png)
+
+## Complete/Maximum Linkage
+
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda (**pairwise distances**). Kemudian, jarak paling tinggi (maximum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendogram yang terbentuk menjadi lebih terpisah antar clusternya (terbentuk cluster yang "compact").
+
+## Single/Minimum Linkage
+
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, jarak paling kecil (minimum distance) akan menjadi ukuran (dis)similarity antar cluster. Hal ini membuat dendogram yang terbentuk menjadi lebih "loose" atau berdekatan antar clusternya.
+
+## Average Linkage
+
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, dihitung rata-rata jarak dari pairwise distance tersebut dan nilai tersebut akan menjadi ukuran (dis)similarity antar cluster.
+
+
 # Reference
 
-[^1]: Tan, P.N., Steinbach, M., Kumar, V. (2006) Introduction to Data Mining. Boston:Pearson Education.
-[^2]: [Hierarchical Clustering](https://uc-r.github.io/hc_clustering)
+[^1]: Tan, P.N., Steinbach, M., Kumar, V. (2006) Introduction to Data Mining. Boston: Pearson Education.
+
+[^2]: Fred, A.L.N. dan Leitao, J.M.N. (2000) Partitional vs Hierarchical Clustering Using a Minimum Grammar Complexity Approach, di F.J. Ferri et al. (Eds.): SSPR&SPR 2000, LNCS 1876, hal. 193-202. Berlin: Springer-Verlag
+
+[^3]: University of Cincinnati Business Analytics. UC Business Analytics R Programming Guide, Bab [Hierarchical Clustering](https://uc-r.github.io/hc_clustering)
+
+[^4]: Rhys, H.I. (2020) [**Machine Learning with R, the tidyverse, and mlr**](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-17/). USA: Manning Publications Co.
 
