@@ -34,7 +34,7 @@ Selain memahami proses pembuatan dendogramnya, mari coba memahami bagaimana node
 
 Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
 
-Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3].
+Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3]. Bacaan lebih lanjut tentang beragam tipe distance matrix dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html).
 
 Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster observasi sehingga dapat terbentuk dendogram dari cluster-cluster yang ada. Proses penggabungan cluster-cluster kecil menjadi satu dendogram utuh dilakukan menggunakan **linkage method**. Berikut ini beberapa jenis linkage method yang sering digunakan:
 
@@ -59,6 +59,44 @@ Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur te
 Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
 ![](image/linkage.png)
+
+# Optimal Cluster
+
+Setelah memahami bagaimana suatu hierarchical clustering dibuat, ada baiknya kita mengetahui parameter suatu hierarchical clustering dianggap baik, atau bagaiamana cara membuat cluster terbaik.
+
+Pada kasus hierarchical clustering, kita dapat menentukan di level dendogram atau (dis)imilarity berapa akan dilakukan pemisahan sehingga terbentuk sebanyak `k` jumlah cluster.
+
+Seperti halnya metode clustering lain, kebaikan cluster dapat dilihat dari seberapa mirip observasi yang berada dalam 1 cluster, dan seberapa berbeda observasi yang berasal dari clusster berbeda setelah percobaan beberapa nilai `k`. Secara umum terdapat 3 metode yang dapat digunakan:
+
+1. **Elbow Method**
+2. **Average Silhouette Method**
+3. **Gap Statistic Method**
+
+## Elbow Method
+
+Nilai kemiripan data antar cluster dapat diwakilkan dengan nilai **total within-cluster sum of square** (Total WSS). Total WSS dapat diartikan sebagai jumlah dari jarak tiap observasi cluster ke nilai tengahnya (centroid). 
+
+[Rumus/intuisi rumus?]
+
+Nilai yang semakin rendah (mendekati nol) mengindikasikan antar data dalam satu cluster semakin mirip. Dapat dilakukan penghitungan total WSS untuk tiap jumlah cluster `k`. Kemudian ditentukan nilai `k` berdasarkan titik yang dimana ketika `k` ditambahkan, maka Total WSS tidak mengalami penurunan yang besar/cenderung landai.
+
+[gambar]
+
+## Average Silhouette Method
+
+Nilai Silhouette adalah ukuran seberapa mirip suatu data dengan clusternya sendiri (kohesi) dibandingkan dengan cluster lain (separasi).
+
+[Rumus/intuisi rumus?]
+
+Nilai silhouette berkisar antara ???1 hingga +1. Nilai yang tinggi menunjukkan bahwa data-data sudah serupa dengan clusternya sendiri dan tidak mirip dengan cluster lain. Jika sebagian besar data memiliki nilai silhouette yang tinggi, maka konfigurasi pengelompokan sudah sesuai, bila banyak yang memiliki nilai rendah, maka konfigurasi pengelompokan belum sesuai (jumlah `k` terlalu banyak atau terlalu sedikit).
+
+[gambar]
+
+## Gap Statistic Method
+
+
+
+Penjelasan lebih detail dapat dibaca [disini](https://uc-r.github.io/kmeans_clustering#optimal).
 
 # Reference
 
