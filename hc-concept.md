@@ -30,11 +30,9 @@ Berikut ini perbedaan cara kerja agglomerative dan divisive clustering bekerja.
 
 Selain memahami proses pembuatan dendrogramnya, mari coba memahami bagaimana node-node (tiap cluster) terbuat dan digabungkan.
 
-Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar clusternya. 
+Tujuan dari clustering secara umum, baik hierarchical maupun partitional clustering adalah untuk membuat cluster yang memiliki karakteristik yang sama dalam satu anggota cluster dan memiliki karakteristik yang berbeda antar clusternya. Konsep inilah yang mengharuskan proses pembuatan cluster untuk memperhatikan **(dis)similarity** / ukuran ketidakmiripan antar data. Tingkat (dis)similarity antar data dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**), contohnya euclidean distance, manhattan, dsb[^3]. 
 
-Tingkat (dis)similarity antar anggota cluster dapat direpresentasikan dengan **jarak** (atau beberapa menyebutnya **distance matrix**). Terdapat beragam pilihan distance matrix yang pemakaiannya bergantung pada tipe data/topik analisis yang sedang digunakan (euclidean distance, manhattan, dst)[^3].
-
-Dalam hierarchical clustering, selain menghitung (dis)similarity antar observasi, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster observasi sehingga dapat terbentuk dendrogram dari cluster-cluster yang ada. Proses penggabungan cluster-cluster kecil menjadi satu dendrogram utuh dilakukan menggunakan **linkage method**. Berikut ini beberapa jenis linkage method yang sering digunakan:
+Selain menghitung (dis)similarity antar data, diperlukan juga cara untuk menghitung (dis)similarity antar 2 cluster data sehingga dapat terbentuk dendrogram dari cluster-cluster yang mirip. Proses penggabungan cluster-cluster menjadi satu dendrogram utuh dilakukan melalui beberapa  **linkage method**:
 
 1. **Complete Linkage** / **Maximum Linkage**
 2. **Single Linkage** / **Minimum Linkage**
@@ -91,7 +89,10 @@ Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
 # Clustering Model
 
-Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan yaitu `hclust()`. `hclust` akan meminta distance matrix sebagai inputnya. Distance matrix yang biasa digunakan adalah *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis.
+Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan yaitu `hclust()`. `hclust` akan meminta parameter di bawah ini untuk membuat dendrogram: 
+
+* Distance Matrix (`d`): Distance matrix yang biasa digunakan adalah *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis. Bacaan lebih lanjut tentang beragam tipe distance matrix untuk tiap tipe data dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html). 
+* Linkage Method (`method`): **Linkage method** akan menentukan rupa dendrogram yang terbentuk. Telah dilakukan diskusi terkait beragam linkage method dan pemilihannya [disini](https://stats.stackexchange.com/questions/195446/choosing-the-right-linkage-method-for-hierarchical-clustering).
 
 # Dendogram & Interpretation
 
@@ -99,17 +100,15 @@ Setelah menghasilkan dendrogram dari hierarchical clustering, sudah sepatutnya k
 
 ![](image/dendrogram.jpg)
 
-Dendrogram sejatinya merupakan struktur yang menggambarkan kemiripan antar data. Tiap data kita pada awalnya diletakan di suatu level dasar dimana tiap data berdiri sendiri sebagai satu cluster tunggal. Pada contoh di atas, tiap instrumen musik merupakan 1 cluster tunggal di bagian dasar dendrogram. 
+Dendrogram sejatinya merupakan struktur yang menggambarkan kemiripan antar data. **Tiap data kita pada awalnya diletakan di suatu level dasar dimana tiap data berdiri sendiri sebagai satu cluster tunggal**. Pada contoh di atas, tiap instrumen musik merupakan 1 cluster tunggal di bagian dasar dendrogram. 
 
-Kemudian, 2 data yang berdekatan akan dihubungkan dengan suatu garis yang bersatu di titik tertentu sehingga menjadi cluster yang lebih besar. Contohnya cluster instrumen "piccolo" & "flute" dan cluster instrumen "basoon" & "clarinet". 
+Kemudian, 2 data yang berdekatan akan dihubungkan dengan suatu garis yang bersatu di titik tertentu sehingga menjadi cluster yang lebih besar. Contohnya cluster instrumen "piccolo" & "flute" dan cluster instrumen "basoon" & "clarinet". **Panjang garis antar data (dihitung tegak lurus dari titik data hingga titik kedua garis bersatu) mewakilkan nilai (dis)similarity antar data** (umumnya berupa nilai distance matrix yang dipakai). Disini kita bisa menyimpulkan bahwa "piccolo" dengan "flute" memiliki kedekatan yang lebih tinggi dibandingkan "basoon" dengan "clarinet". Kita juga bisa mengetahui bahwa "flute" memiliki kedekatan yang lebih tinggi dengan "clarinet" dibandingkan dengan "trumpet". Hal ini karena "flute" dan "clarinet" memiliki panjang garis antar data yang lebih pendek dibandingkan antara "flute" dan "trumpet".
 
-Panjang garis antar data (dihitung tegak lurus dari titik data hingga titik kedua garis bersatu) mewakilkan nilai (dis)similarity antar data (umumnya berupa nilai distance matrix yang dipakai). Disini kita bisa menyimpulkan bahwa "piccolo" dengan "flute" memiliki kedekatan yang lebih tinggi dibandingkan "basoon" dengan "clarinet". Kita juga bisa mengetahui bahwa "flute" memiliki kedekatan yang lebih tinggi dengan "clarinet" dibandingkan dengan "trumpet". Hal ini karena "flute" dan "clarinet" memiliki panjang garis antar data yang lebih pendek dibandingkan antara "flute" dan "trumpet".
-
-Pada dendrogram, kita juga tetap dapat melakukan partisi antar data atau membuat cluster-cluster data dengan memotong dendogram di nilai distance / (dis)similarity tertentu. Pada contoh ini kita membuat partisi berupa cluster "strings", "woodwind", "brass", dan "percussion".
+Pada dendrogram, kita juga tetap dapat melakukan partisi antar data atau **membuat cluster-cluster data dengan memotong dendogram di nilai distance / (dis)similarity tertentu**. Pada contoh ini kita membuat partisi berupa cluster "strings", "woodwind", "brass", dan "percussion". 
 
 Layaknya menentukan kedekatan antar data, kita juga dapat menetukan kedekatan antar cluster dengan memperhitungkan panjang garis antar data. Dari dendrogram di atas kita bisa menarik insight bahwa cluster "woodwind" lebih dekat dengan cluster "strings" dibandingkan dengan cluster "brass" dan "percussion".
 
-Bila disimpulkan, semakin panjang garis antar data maka semakin berbeda antar data/cluster tersebut, dan semakin pendek garis antar data maka semakin mirip antar data/cluster tersebut. Dari pemahaman ini, kita bisa menentukan manakah data yang berdekatan/berjauhan dengan data yang sedang kita analisis.
+Bila disimpulkan, **semakin panjang garis antar data maka semakin berbeda antar data/cluster tersebut, dan semakin pendek garis antar data maka semakin mirip antar data/cluster tersebut**. Dari pemahaman ini, kita bisa menentukan manakah data yang berdekatan/berjauhan dengan data yang sedang kita analisis.
 
 # Cluster Analysis
 
@@ -123,6 +122,23 @@ Untuk mendapatkan banyak cluster yang optimum, berikut beberapa cara yang dapat 
 - membuat cluster dendrogram menggunakan beberapa metode
 - pilih banyaknya cluster yang telah diindentifikasi pada masing-masing metode berdasarkan breakpoint jarak pada dendrogram
 
+# Pros & Cons
+
+Berikut adalah rangkuman dari keunggulan dan kekurangan Hierarchical Clustering yang dapat dipertimbangkan sebelum kita menggunakannya untuk analisis data:
+
+**Kelebihan:**
+
+* Mampu menggambarkan kedekatan antar data dengan dendrogram
+* Cukup mudah untuk pembuatannya.
+
+**Kekurangan:**
+
+* Tidak dibuat untuk mempartisikan data ke cluster-cluster yang mutlak (cluster dapat berubah-ubah tergantung level pemotongan dendrogram).
+* Tidak dapat menganalisis data kategorik secara langsung (karena penghitungan jarak yang hanya bisa dilakukan untuk data numerik, sehingga data kategorik perlu dipre-process terlebih dahulu)
+* Sensitif terhadap data yang memiliki skala berbeda (karena penghitungan jarak akan bergantung pada skala data, sehingga data perlu dinormalisasi/standarisasi terlebih dahulu).
+* Sensitif terhadap outlier (karena penghitungan jarak sensitif terhadap nilai outlier).
+* Cukup berat komputasinya untuk data berukuran besar.
+
 # Hierarchical Clustering Application
 
 Keunggulan dari hierarchical clustering yang tidak dimiliki oleh metode clustering lain adalah dapat membuat dendrogram yang merepresentasikan kedekatan antar data. Hal ini amat bermanfaat khususnya dalam analisis network/komunitas atau deteksi data dari suatu komunitas. Oleh karena itu hierarchical clustering banyak dilakukan pada kasus-kasus berikut:
@@ -130,37 +146,6 @@ Keunggulan dari hierarchical clustering yang tidak dimiliki oleh metode clusteri
 1. [Social Network Community Detection](https://www.hindawi.com/journals/complexity/2017/3719428/)
 2. [Analisis Evolusi Mahluk Hidup - Biodiversity of Butterflies](https://www.floridamuseum.ufl.edu/science/at-last-butterflies-get-a-bigger-better-evolutionary-tree/)
 3. [Analisis Penyebaran Penyakit - Nextrain for COVID19 Tracking](https://academic.oup.com/bioinformatics/article/34/23/4121/5001388)
-
-# Additional Notes
-
-## What to Tune?
-
-Kasus yang berbeda akan menggunakan beberapa setting yang berbeda dalam pembuatan hierarchical clustering. Berikut adalah hal-hal yang dapat dipertimbangkan dalam pembuatan hierarchical clustering:
-
-* Distance Matrix apa yang sebaiknya digunakan?
-
-Hal ini amat bergantung pada data yang kita olah. Bacaan lebih lanjut tentang beragam tipe distance matrix untuk tiap tipe data dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html).
-
-* Linkage Method apa yang sebaiknya digunakan?
-
-Linkage method akan menentukan rupa dendrogram yang terbentuk. Telah dilakukan diskusi terkait beragam linkage method dan pemilihannya [disini](https://stats.stackexchange.com/questions/195446/choosing-the-right-linkage-method-for-hierarchical-clustering) .
-
-## Pros & Cons
-
-Sebelum menggunakan hierarchical clustering, ada baiknya untuk mempertimbangkan beberapa kelebihan dan kekurangannya.
-
-Kelebihan:
-
-* Mampu menggambarkan kedekatan antar data dengan dendrogram
-* Cukup mudah untuk pembuatannya.
-
-Kekurangan:
-
-* Tidak dapat menganalisis data kategorik secara langsung (terhambat pada penghitungan jarak yang hanya bisa dilakukan untuk data numerik, sehingga data kategorik perlu dipre-process terlebih dahulu)
-* Tidak diperuntukkan untuk menghasilkan jumlah cluster optimal yang mutlak (jumlah cluster dapat berubah-ubah tergantung level pemotongan dendrogram).
-* Sensitif terhadap data yang memiliki skala berbeda (sehingga data perlu dinormalisasi/standarisasi terlebih dahulu).
-* Sensitif terhadap outlier.
-* Cukup berat komputasinya untuk data berukuran besar.
 
 # Reference
 
