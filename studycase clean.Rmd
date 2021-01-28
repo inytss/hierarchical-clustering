@@ -1,0 +1,62 @@
+---
+title: "Coffee Analysis using Hierarchical Clustering"
+author: "Nabiilah Ardini Fauziyyah"
+date: "28/1/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+INTRO
+
+## Business Question
+
+## Read Data 
+
+```{r}
+USArrests
+```
+
+## EDA
+
+```{r}
+colSums(is.na(USArrests))
+```
+
+```{r}
+boxplot(USArrests)
+```
+
+## Data Pre-processing
+
+```{r}
+library(dplyr)
+
+data <- USArrests %>% 
+  mutate(State = rownames(.)) %>% 
+  mutate_at(vars(-State), scale)
+
+head(data)
+```
+## Clustering
+
+```{r}
+# calculate distance matrix
+dist_data <- dist(x = data[,-5], method = "euclidean")
+```
+
+```{r}
+# build tree
+tree_data <- hclust(d = dist_data, method = "average")
+plot(tree_data, labels = data$State)
+```
+```{r}
+plot(tree_data, labels = data$State)
+```
+
+## Insight
+
+
+

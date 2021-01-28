@@ -91,7 +91,7 @@ Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^4]:
 
 Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan yaitu `hclust()`. `hclust` akan meminta parameter di bawah ini untuk membuat dendrogram: 
 
-* Distance Matrix (`d`): Distance matrix yang biasa digunakan adalah *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis. Bacaan lebih lanjut tentang beragam tipe distance matrix untuk tiap tipe data dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html). 
+* Distance object (`d`): objek berupa hasil perhitungan distance matrix dari keseluruhan data. Objek ini dapat dibuat menggunakan fungsi `dist()`. Distance matrix yang biasa digunakan adalah *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis. Bacaan lebih lanjut tentang beragam tipe distance matrix untuk tiap tipe data dapat dilihat [disini](https://people.revoledu.com/kardi/tutorial/Similarity/index.html). 
 * Linkage Method (`method`): **Linkage method** akan menentukan rupa dendrogram yang terbentuk. Telah dilakukan diskusi terkait beragam linkage method dan pemilihannya [disini](https://stats.stackexchange.com/questions/195446/choosing-the-right-linkage-method-for-hierarchical-clustering).
 
 # Dendogram & Interpretation
