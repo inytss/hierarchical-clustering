@@ -217,11 +217,11 @@ Berikut ini adalah langkah yang dilakukan untuk melakukan cluster analisis:
 4. Menentukan dimana akan melakukan pemotongan cluster tree. Disinilah tahap dimana banyak cluster akan terbentuk.
 
 
-## Cluster Modeling
+# Study Case `USArrest`
 
 Pada artikel ini, akan dicoba dijelaskan cara kerja metode clustering AGNES menggunakan data `USArrest`. Sebelum membuat pemodelan clustering, kita harus menyiapkan terlebih dahulu data tersebut. Selain itu kita pelu untuk membuat distance matrix karena metode AGNES akan mengolah data dalam bentuk distance matrix. 
 
-### Data Pre-Paration
+## Data Pre-Paration
 
 Pertama, kita load terlebih dahulu data yang akan digunakan.
 ```{r echo=FALSE}
@@ -256,7 +256,7 @@ Selanjutnya kita perlu memastikan ada tidaknya missing data. Untuk melakukan pen
 ```{r}
 anyNA(us_z)
 ```
-### Mengukur (Dis)similarity Data
+## Mengukur (Dis)similarity Data
 
 Karena data yang kita miliki sudah maka tahap selanjutnya yaitu melakukan perhitungan (dis)similarity pada data. Metode distance yang akan digunakan pada kasus ini yaitu euclidean distance.
 
@@ -268,7 +268,7 @@ m <- us_dist %>% as.matrix()
 m[1:5, 1:5]
 ```
 
-### Modeling {.tabset}
+## Modeling {.tabset}
 
 Setelah persiapan data selesai, maka saatnya membuat model clustering. Pembuatan model clustering yang akan dicoba yaitu 5 metode pada AGNES clustering yang telah dijelaskan pada bab sebelumnya. Hal ini bertujuan untuk membandingkan metode cluster mana yang lebih baik.
 
@@ -294,6 +294,7 @@ us_hc_avg <- hclust(d = us_dist, method = "average")
 
 * **Centroid Linkage**
 ```{r}
+set.seed(100)
 us_hc_centroid <- hclust(d = us_dist, method = "centroid")
 ```
 
@@ -302,50 +303,241 @@ us_hc_centroid <- hclust(d = us_dist, method = "centroid")
 us_hc_ward <- hclust(d = us_dist, method = "ward.D2")
 ```
 
-
-#### Dendrogram Complete Linkage
+### Dendrogram Complete Linkage
 
 Pada setiap metode clustering tersebut akan membentuk sebuah dendrogram. Dendrogram dapat divisualisasikan menggunakan fungsi `plot()` biasa atau bisa menggunakan fungsi `fviz_dend()` dari package `factoextra`.
 
-```{r}
+```{r, fig.height=5}
 library(factoextra)
 fviz_dend(us_hc_complete, cex = 0.5, main = "Cluster Dendrogram Complete Linkage")
 ```
 
-Pada dendrogram tersebut, setiap observasi yang memiliki kemiripan akan dihubungkan oleh sebuah garis yang membentuk cabang/nodes yang baru. Setiap garis yang dihasilkan memiliki ketinggian yang berbeda-beda. Oleh karena itu pada y-axis terdapat "height" yang menjelaskan (dis)similarity atau jarak antar kedua observasi. 
+Pada dendrogram tersebut, setiap observasi yang memiliki kemiripan akan dihubungkan oleh sebuah garis yang membentuk cabang/nodes yang baru. Setiap garis yang dihasilkan memiliki ketinggian yang berbeda-beda. Oleh karena itu pada y-axis terdapat "height" yang menjelaskan (dis)similarity atau jarak antar kedua observasi. Height yang ditunjukkan pada dendrogram tersebut disebut sebagai *cophenetic distance*.
 
-[!] ini ditambahin dg penguatan setiap metodenya kenapa treenya kek gitu
+Hasil yang terbentuk pada dendrogram complete linkage menunjukkan dendrogram yang cukup compact, di mana setiap cluster terlihat memiliki similarity yang jelas. Hal ini akan mempermudah saat pemotongan dendrogram untuk membentuk banyak cluster. 
 
 Kembali pada tujuan awal, melakukan pengelompokan pada data. Menggunakan dendrogram, kita bisa melakukan pemotongan pada dendrogram tersebut pada ketinggian tertentu untuk mendapatkan banyak cluster yang terbentuk. 
 
-#### Single Linkage
+Menggunakan dendrogram yang diperoleh, kita bisa menentukan berapa banyak cluster yang akan kita bentuk dan melakukan pemotongan dendrogramnya. Untuk melakukan pemotongan dendrogram, R menyediakan fungsi `cutree()` dengan mendefinisikan banyak cluter (`k`) yang akan kita bentuk.
+
+Pada metode complete linkage ini akan kita potong menjadi 4 cluster.
+```{r}
+complete_clust <- cutree(us_hc_complete,  k = 4)
+head(complete_clust)
+```
+
+Berikut ini banyak anggota dari masing-masing cluster yang terbentuk.
+```{r}
+table(complete_clust)
+```
+Anggota pada masing-masing cluster cukup merata dengan cluster yang paling banyak memiliki anggota adalah cluster 3. 
+
+Berikut hasil akhir cluster yang terbentuk apabila dilihat dari dendrogram yang terbentuk.
+```{r, fig.height=5}
+fviz_dend(us_hc_complete, k = 4, k_colors = "jco", rect = T, main = "Complete Linkage Cluster")
+```
+
+Cara membaca cluster pada dendrogram sebagai berikut :
+
+* Cluster 1 digambarkan oleh dendrogram berwarna merah.
+* Cluster 2 digambarkan oleh dendrogram berwarna abu-abu.
+* Cluster 3 digambarkan oleh dendrogram berwarna kuning.
+* Cluster 4 digambarkan oleh dendrogram berwarna biru.
+
+Salah satu cara yang dapat digunakan untuk memvalidasi cluster tree yaitu dengan menghitung korelasi antara cophenetic distance dengan jarak original masing-masing observasi. Semakin kuat nilai korelasi jarak antar observasi, maka cluster tersebut merepresentasikan data yang dimiliki.
+
+Untuk melihat korelasinya, maka kita perlu menghitung cophenetic distance terlebih dahulu menggunakan fungsi `cophenetic()`.
 
 ```{r}
+complete_coph <- cophenetic(us_hc_complete)
+cor(complete_coph, us_dist)
+```
+
+### Dendrogram Single Linkage
+
+```{r, fig.height=5}
 fviz_dend(us_hc_single, cex = 0.5, main = "Cluster Dendrogram Single Linkage")
 ```
 
+Hasil dendrogram yang terbentuk pada model single linkage terlihat lebih lebar di mana antar anggota cluster terlihat rapat dan sangat dekat. Hal ini dikarenakan proses pembuatan hirarki dendrogram menggunakan minimum (dis)similarity pada setiap clusternya. 
 
-#### Average Linkage
+Sangat sulit untuk menentukan banyak cluster yang akan terbentuk apabila setiap observasi sangat rapat. Apabila dicoba untuk membentuk 4 cluster, maka berikut ini hasil cluster yang terbentuk.
+```{r}
+single_clust <- cutree(us_hc_single, k = 4)
+head(single_clust)
+```
+Banyak anggota pada masing-masing cluster adalah sebagai berikut.
+```{r}
+table(single_clust)
+```
+Anggota pada cluster yang terbentuk sangat berbeda secara signifikan. Cluster 1 memiliki anggota yang paling banyak hampir sebanyak total observasi pada data. Hal ini yang dikarenakan terlalu rapatnya antar observasi sehingga sulit dipisahkan perbedaannya.
+```{r, fig.height=5}
+fviz_dend(us_hc_single, k = 4, k_colors = "jco", rect = T, main = "Single Linkage Cluster")
+```
+
+Cara membaca cluster pada dendrogram yaitu  sebagai berikut :
+
+* Cluster 1 digambarkan oleh dendrogram berwarna merah.
+* Cluster 2 digambarkan oleh dendrogram berwarna biru.
+* Cluster 3 digambarkan oleh dendrogram berwarna abu-abu.
+* Cluster 4 digambarkan oleh dendrogram berwarna kuning.
+
+Apabila kita cek validasi dari cluster tree yang terbentuk, korelasi yang diperoleh sangat rendah, artinya cluster yang terbentuk kurang merepresentasikan kondisi data yang ada. Sehingga menggunakan single linkage untuk data `USArrest` kurang relevan.
 
 ```{r}
+single_coph <- cophenetic(us_hc_single)
+cor(single_coph, us_dist)
+```
+
+
+### Dendrogram Average Linkage
+
+```{r, fig.height=5}
 fviz_dend(us_hc_avg, cex = 0.5, main = "Cluster Dendrogram Average Linkage")
 ```
 
-#### Centroid Linkage
+Hasil dendrogram yang terbentuk pada model average linkage terlihat hampir mirip seperti complete linkage, yaitu terlihat compact. Model average linkage biasa digunakan karena menghasilkan nilai validasi cluster tree yang lebih baik dibandingkan metode linkage yang lain. 
 
 ```{r}
+avg_coph <- cophenetic(us_hc_avg)
+cor(avg_coph, us_dist)
+```
+
+Apabila dendrogramnya dipotong untuk membentuk 4 cluster, berikut hasil yang diperoleh.
+```{r}
+avg_clust <- cutree(us_hc_avg, k = 4)
+table(avg_clust)
+```
+Anggota cluster paling banyak diperoleh pada cluster 4 sebanyak 30 cluster. Namun terdapat cluster yang hanya memiliki 1 anggota saja yaitu pada cluster 2. Hal ini dapat dijadikan indikasi bahwa observasi pada cluster 2 yaitu "Alaska" merupakan anomali data. 
+
+Berikut visualisasi dendrogram yang terbentuk pada masing-masing cluster.
+```{r, fig.height=5}
+fviz_dend(us_hc_avg, k = 4, k_colors = "jco", rect = T, main = "Average Linkage Cluster")
+```
+
+Cara membaca cluster pada dendrogram yaitu  sebagai berikut :
+
+* Cluster 1 digambarkan oleh dendrogram berwarna abu-abu.
+* Cluster 2 digambarkan oleh dendrogram berwarna kuning.
+* Cluster 3 digambarkan oleh dendrogram berwarna merah.
+* Cluster 4 digambarkan oleh dendrogram berwarna biru.
+
+### Dendrogram Centroid Linkage
+
+```{r, fig.height=5}
 fviz_dend(us_hc_centroid, cex = 0.5, main = "Cluster Dendrogram Centroid Linkage")
 ```
 
-#### Ward's Minimum Variance
+Dendrogram yang terbentuk sangat berbeda dengan dedrogram pada model sebelumnya. Dalam centroid linkage terdapat pembentukan centroid atau pusat cluster antar 2 observasi. Cabang pada dendrogram  terdapat ketidak beraturan. 
 
+Apabila dilihat dari nilai korelasi distancenya menunjukkan nilai yang sedikit cukup merepresentasikan data yang ada. 
 ```{r}
+centroid_coph <- cophenetic(us_hc_centroid)
+cor(centroid_coph, us_dist)
+```
+
+Berikut ini anggota cluster pada 4 cluster yang terbentuk.
+```{r}
+centroid_clust <- cutree(us_hc_centroid, k = 4)
+table(centroid_clust)
+```
+Anggota cluster didominasi pada cluster 1 sebanyak 47 observasi, namun untuk cluster yang lain hanya memiliki 1 observasi saja. Berikut visualiasi cluster yang terbentuk untuk masing-masing dendrogramnya.
+
+```{r, fig.height=5, warning=FALSE}
+fviz_dend(us_hc_centroid, k = 4, k_colors = "jco", rect = T, main = "Centroid Linkage Cluster")
+```
+
+Hasil partisi cluster yang terbentuk tidak sesuai dengan yang seharusnya. Berikut deskripsi anggota cluster yang seharusnya:
+
+* Cluster 1 terdiri dari negara New Jersey hingga California.
+* Cluster 2 beranggotakan North California.
+* Cluster 3 beranggotakan Alaska.
+* Cluster 4 beranggotakan Vermont.
+
+### Dendrogram Ward's Minimum Variance
+
+```{r, fig.height=5}
 fviz_dend(us_hc_ward, cex = 0.5, main = "Cluster Dendrogram Ward's Minimum Variance")
 ```
 
+Dendrogram yang diperoleh dari model ward's minimum variance terlihat sangat terpartisi dengan baik. Selain itu, pada setiap observasi yang memiliki nilai similarity tinggi menunjukkan height yang rendah karena sifat dari ward's yaitu meminimumkan nilai within sum of squared(wss)-nya. 
+
+Berdasarkan nilai korelasi distance pada model ward's ini diperoleh 0.69, yang mana dari segi nilai tidak terlalu besar, namun untuk melakukan partisi model ward's cukup bisa membuat partisi untuk menentukan banyak cluster yang terbentuk.
+```{r}
+ward_coph <- cophenetic(us_hc_ward)
+cor(ward_coph, us_dist)
+```
+Berikut ini anggota cluster pada 4 cluster yang terbentuk.
+```{r}
+ward_clust <- cutree(us_hc_ward, k = 4)
+table(ward_clust)
+```
+Anggota cluster yang diperoleh pada model ward's cukup mirip seperti model complete linkage. Anggota cluster yang paling sedikit yaitu pada cluster 1. 
+
+```{r, fig.height=5, warning=FALSE}
+fviz_dend(us_hc_ward, k = 4, k_colors = "jco", rect = T, main = "Ward's Minimum Variance Cluster")
+```
+
+Cara membaca cluster pada dendrogram sebagai berikut :
+
+* Cluster 1 digambarkan oleh dendrogram berwarna biru.
+* Cluster 2 digambarkan oleh dendrogram berwarna kuning.
+* Cluster 3 digambarkan oleh dendrogram berwarna merah
+* Cluster 4 digambarkan oleh dendrogram berwarna abu-abu.
+
+## Cluster Validation
+
+Dalam analisis clustering, menentukan banyak cluster terbentuk serta model yang lebih baik digunakan cukup sulit. Secara umum, untuk menentukan cluster yang baik terdapat dua pengukuran yang sering dilakukan:
+
+1. Internal measures
+
+Internal measures merupakan pengukuran untuk melakukan cluster validation berdasarkan informasi internal yang terdapat pada data. Metode yang biasa digunakan pada internal measure yaitu *connectivity*, *dunn index*, dan *silhouette*. Nilai connectivity berkisar antara 0-inf, dimana cluster yang baik memiliki connectivity yang kecil. Nilai silhouette dan dunn index yang diharapkan adalah yang semakin besar, maka clusternya semakin baik.
+
+2. Stability measures
+
+Stability measures merupakan pengukuran validation cluster yang lebih mendalam dibandingkan internal measures. Stability mengukur tingkat konsistensi dari hasil cluster yang terbentuk apabila terdapat satu variabel yang dihilangkan dalam satu waktu. Pengukuran yang dilakukan pada stability yaitu:
+
+* *Average proportion of non-overlap (APN)*: mengukur nilai proporsi rata-rata banyak observasi pada cluster yang sama pada pembuatan cluster dengan data yang lengkap dan data yang sudah dihilangkan satu variabelnya.
+* *Average distance (AD)*: jarak rata-rata antar observasi dalam cluster yang sama pada pembuatan cluster dengan data yang lengkap dan data yang sudah dihilangkan satu variabelnya.
+* *Average distance between means (ADM)*: jarak rata-rata antar pusat cluster pada pembuatan cluster dengan data yang lengkap dan data yang sudah dihilangkan satu variabelnya.
+* *Figure of merit (FOM)*: rata-rata varians intra cluster pada variabel yang dihapus di mana clustering dilakukan pada sisa kolom yang tidak terhapus.
+
+> Nilai dari APN, ADM, dan FOM measure stability diatas memiliki range 0-1, di mana semakin kecil nilainya, maka akan semakin konsisten hasil clustering yang terbentuk. Sedangkan nilai AD berkisar pada range 0-inf, semakin kecil nilainya juga semakin baik hasil clusternya[^6].
+
+Bahasan lebih jauh mengenai cluster validation dapat dibaca [disini](https://www.datanovia.com/en/lessons/cluster-validation-statistics-must-know-methods/).
+
+Untuk melakukan validasi cluster, R menyediakan package `clValid`. Dalam melakukan validasi clusternya, fungsi yang digunakan adalah `clValid()`. Kita akan coba cek banyak cluster yang optimal digunakan berdasarkan internal measures dan stability measures menggunakan data `us_z` yang sudah dilakukan standarisasi.
+
+Fungsi `clValid()` memiliki beberapa argumen diantaranya:
+
+* `obj`: data yang akan digunakan dalam clustering
+* `nClust`: banyak cluster yang akan di evaluasi
+* `clMethods`: metode clustering yang digunakan, beberapa diantaranya yang bisa digunakan yaitu "hierarchical, "kmeans", "diana", "fanny", "som", "model", "sota", "pam", "clara", dan "agnes". Bisa menggunakan lebih dari satu metode yang akan di evaluasi.
+* `validation`: pengukuran validasi cluster yang digunakan, beberapa diantaranya yaitu "internal", "stability", dan "biological". Bisa menggunakan lebih dari satu metode yang akan di evaluasi.
+* `metric`: pengukuran (dis)similarity yang digunakan, beberapa yang bisa digunakan yaitu "euclidean", "correlation", dan "manhattan".
+* `method`: metode hierarchical clustering yang digunakan, beberapa yang bisa digunakan yaitu "ward", "single", "complete", dan "average". 
 
 
+```{r}
+library(clValid)
+internal <- clValid(us_z, nClust = 3:5, clMethods = "hierarchical", validation = "internal", metric = "euclidean")
 
+summary(internal_complete)
+```
+
+Berdasarkan hasil validasi cluster menggunakan dunn index dan silhouette menunjukkan banyak cluster yang optimal terbentuk yaitu 4 cluster.
+
+```{r}
+stability <- clValid(us_z, nClust = 3:4, clMethods = "hierarchical", validation = "stability")
+# Display only optimal Scores
+optimalScores(stability)
+```
+
+Berdasarkan hasil validasi cluster menggunakan stability measures cluster yang terbentuk dapat terbentuk 3 atau 4 cluster. 
+
+# Conclusion
+
+Berdasarkan analisis cluster menggunakan hierarchical clustering, banyak sekali metode yang digunakan. 
 
 # Reference
 
@@ -358,3 +550,5 @@ fviz_dend(us_hc_ward, cex = 0.5, main = "Cluster Dendrogram Ward's Minimum Varia
 [^4]: Rhys, H.I. (2020) [Machine Learning with R, the tidyverse, and mlr](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-17/). USA: Manning Publications Co.
 
 [^5]: [(Dis)similarity Measure](https://www.datanovia.com/en/lessons/clustering-distance-measures/)
+
+[^6]: [Cluster Validation](https://www.datanovia.com/en/lessons/choosing-the-best-clustering-algorithms/)
