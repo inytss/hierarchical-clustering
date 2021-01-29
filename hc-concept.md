@@ -153,17 +153,37 @@ Bila disimpulkan, semakin panjang garis antar data maka semakin berbeda antar da
 
 Meskipun kita tidak diwajibkan untuk menentukan nilai `k` (jumlah cluster yang ingin dibentuk), terdapat beberapa hal yang perlu diperhatikan dari cluster-cluster yang terbentuk pada dendrogram. 
 
-Dalam analisis cluster, akan sangat mungkin kita memperoleh cluster yang hanya memiliki 1 atau sedikit anggota saja sehingga menyebabkan banyaknya cluster yang terbentuk. Ketika hal tersebut terjadi, kita perlu melakukan pengecekan kembali pada data yang kita miliki. Hal ini bisa disebabkan karena adanya data yang cukup berbeda dengan yang lainnya atau bisa disebut sebagai outlier / anomali. Data yang seperti ini akan menyebabkan adanya cluster yang memiliki 1 anggota.
+Seperti yang diketahui bahwa agglomerative clustering bekerja dengan konsep "bottom-up" yang mana artinya setiap data akan menjadi cluster-cluster dan setiap cluster kecil yang memiliki kesamaan akan digabungkan menjadi satu cluster hingga seluruh data menjadi satu cluster besar. Dalam analisis cluster, akan sangat mungkin kita memperoleh cluster yang hanya memiliki satu atau sedikit anggota saja sehingga menyebabkan banyaknya cluster yang terbentuk. Ketika hal tersebut terjadi, kita perlu melakukan pengecekan kembali pada data yang kita miliki. Hal ini bisa disebabkan karena adanya data yang cukup berbeda dengan yang lainnya atau bisa disebut sebagai outlier / anomali. Data yang seperti ini akan menyebabkan adanya cluster yang memiliki satu anggota.
 
 Berikut ini adalah langkah yang dilakukan untuk melakukan cluster analisis:
 
 1. Menyiapkan data dimana data yang digunakan adalah data bertipe numerik
-2. Menghitung (dis)similarity atau jarak antar data yang berpasangan pada dataset
+2. Menghitung (dis)similarity atau jarak antar data yang berpasangan pada dataset untuk digunakan sebagai distance matrix
 3. Membuat cluster dendrogram menggunakan beberapa metode linkage
 4. Menentukan dimana akan melakukan pemotongan cluster tree. Disinilah tahap dimana banyak cluster akan terbentuk.
 
-Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat digunakan yaitu `hclust()`. `hclust` akan meminta distance matrix sebagai inputnya. Distance matrix yang biasa digunakan adalah *euclidean distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis.
+## (Dis)similarity Measure
 
+Hal yang penting dilakukan pertama kali saat ingin melakukan analisis clustering yaitu melakukan perhitungan (dis)similarity. Pemilihan metode (dis)similarity akan menentukan seberapa mirip suatu data untuk dijadikan kedalam satu cluster. Dalam metode clustering AGNES, (dis)similarity ini digunakan untuk membentuk distance matrix. Pengukuran (dis)similarity yang biasa digunakan adalah *euclidean distance* dan *manhattan distance*, namun bisa saja menggunakan pengukuran jarak yang lain, bergantung pada data yang sedang kita analisis. Berikut ini formula dalam perhitungan (dis)similarity dari kedua metode tersebut:
+
+1. *Euclidean distance*
+
+$$d_{xy} = \sqrt {\sum_{i=1}^{n}(x_i - y_i)^2}$$
+
+2. *Manhattan distance*
+
+$$d_{xy} = \sum_{i=1}^{n} \abs{(x_i - y_i)}$$
+
+Ada beberapa pengukuran (dis)similarity yang lain yang bisa digunakan yaitu menggunakan *correlation-based distance*. Correlation-based distance biasa digunakan ketika kita ingin mengetahui bentuk (dis)similarity pada suatu data yang bergerak "naik" atau "turun" secara bersamaan. Pengukuran (dis)similarity ini sering digunakan untuk melakukan analisis ekspresi gen atau dalam dunia marketing, ketika kita ingin melakukan customer segmentation berdasarkan kesamaan barang yang dibeli oleh pelanggan tanpa memperhatikan banyak barang yang mereka beli. 
+
+Euclidean distance dan manhattan distance cenderung memiliki konsep yang berkebalikan dengan correlation-based distance, data yang akan dikelompokkan bersama merupakan data yang memiliki karakteristik nilai yang sama, entah sama besarnya atau sama kecilnya. Pengukuran ini biasa digunakan pada kasus customer segmentation yang memperhatikan banyaknya pembelian dari pelanggan, segmentasi daerah yang memiliki kasus COVID tinggi/rendah, dan lain sebagainya[^5]. Pada R, untuk menghitung (dis)similarity bisa menggunakan fungsi `dist()`. Secara default, fungsi `dist()` akan menghitung euclidean distance antar observasi. 
+
+## Cluster Modeling
+
+Pada artikel ini, akan dicoba dijelaskan cara kerja metode clustering AGNES menggunakan data `USArrest`. Sebelum membuat pemodelan clustering, kita harus menyiapkan terlebih dahulu data tersebut. Selain itu kita pelu untuk membuat distance matrix karena metode AGNES akan mengolah data dalam bentuk distance matrix. 
+
+
+ 
 # Reference
 
 [^1]: Tan, P.N., Steinbach, M., Kumar, V. (2006) Introduction to Data Mining. Boston: Pearson Education.
@@ -173,4 +193,6 @@ Dalam pembuatan model agglomerative clustering, R menyediakan fungsi yang dapat 
 [^3]: University of Cincinnati Business Analytics. UC Business Analytics R Programming Guide, Bab [Hierarchical Clustering](https://uc-r.github.io/hc_clustering)
 
 [^4]: Rhys, H.I. (2020) [Machine Learning with R, the tidyverse, and mlr](https://livebook.manning.com/book/machine-learning-for-mortals-mere-and-otherwise/chapter-17/). USA: Manning Publications Co.
+
+[^5]: [(Dis)similarity Measure](https://www.datanovia.com/en/lessons/clustering-distance-measures/)
 
