@@ -17,6 +17,6 @@ Pada artikel ini, akan lebih banyak dibahas mengenai beberapa metode dalam agglo
 4. **Centroid Linkage**
 5. **Ward's minimum Variance**
 
-![](image/linkage.png)
+<center> ![](image/linkage.png) </center>
 
 Happy learning ^^
