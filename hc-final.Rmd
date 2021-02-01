@@ -1,7 +1,7 @@
 ---
 title: "Introduction to Hierarchical Clustering"
 author: "Nabiilah Ardini Fauziyyah dan Inayatus Sholikhah"
-date: "`r format(Sys.Date(), '%e %B, %Y')`"
+date: "`r format(Sys.Date(), '%d, %e %B %Y')`"
 output: 
   html_document:
     toc: true
@@ -29,37 +29,37 @@ options(scipen = 99)
 library(dplyr)
 ```
 
-Clustering merupakan salah satu metode Unsupervised Learning yang bertujuan untuk melakukan pengelompokan data berdasasrkan kemiripan/jarak antar data. Clustering memiliki karakteristik dimana anggota dalam satu cluster memiliki kemiripan yang sama atau jarak yang sangat dekat, sementara anggota antar cluster memiliki kemiripan yang sangat berbeda atau jarak yang sangat jauh. Menurut (Tan et al., 2006) dalam bukunya yang berjudul *Introduction to Data Mining*, metode clustering dibagi menjadi dua jenis, yaitu Hierarchical Clustering dan Partitional Clustering[^1]. 
+Clustering merupakan salah satu metode Unsupervised Learning yang bertujuan untuk melakukan pengelompokan data berdasasrkan kemiripan/jarak antar data. Clustering memiliki karakteristik dimana anggota dalam satu cluster memiliki kemiripan yang sama atau jarak yang sangat dekat, sementara anggota antar cluster memiliki kemiripan yang sangat berbeda atau jarak yang sangat jauh. Menurut (Tan et al., 2006) dalam bukunya yang berjudul *Introduction to Data Mining*, metode clustering dibagi menjadi dua jenis, yaitu **Hierarchical Clustering** dan **Partitional Clustering**[^1]. 
 
-**Partitional Clustering** umumnya bertujuan untuk mengelompokkan data menjadi beberapa cluster yang lebih kecil[^2]. Pada prosesnya, setiap cluster akan memiliki titik pusat cluster (centroid) dan mencoba menghitung setiap data yang paling dekat dengan centroid tersebut. Metode dalam partitional clustering diantaranya k-means, fuzzy k-means, dan mixture modelling.
+**Partitional Clustering** umumnya bertujuan untuk mengelompokkan data menjadi beberapa cluster yang lebih kecil[^2]. Pada prosesnya, setiap cluster akan memiliki titik pusat cluster (*centroid*) dan mencoba menghitung setiap data yang paling dekat dengan centroid tersebut. Metode dalam partitional clustering diantaranya *k-means*, *fuzzy k-means*, dan *mixture modeling*.
 
 ```{r, out.width = "80%", echo = FALSE, fig.align = "center"}
 knitr::include_graphics("image/partitional.png")
 ```
 
-Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu bagan hirarki (**dendrogram**) dengan tujuan menunjukkan kemiripan antar data. Setiap data yang mirip akan memiliki hubungan hirarki yang dekat dan menbentuk cluster data. Bagan hirarki akan terus terbentuk hingga seluruh data terhubung dalam bagan hirarki tersebut. Cluster dapat dihasilkan dengan memotong bagan hirarki pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu single linkage, complete linkage, average linkage, dan ward's minimum variance.
+Sedangkan dalam **Hierarchical Clustering**, pengelompokan data dilakukan dengan membuat suatu bagan hirarki (**dendrogram**) dengan tujuan menunjukkan kemiripan antar data. Setiap data yang mirip akan memiliki hubungan hirarki yang dekat dan menbentuk cluster data. Bagan hirarki akan terus terbentuk hingga seluruh data terhubung dalam bagan hirarki tersebut. Cluster dapat dihasilkan dengan memotong bagan hirarki pada level tertentu. Beberapa metode dalam hierarchical clustering yaitu *single linkage*, *complete linkage*, *average linkage*, dan *ward's minimum variance*.
 
 ```{r, out.width = "80%", echo = FALSE, fig.align = "center"}
 knitr::include_graphics("image/hc.png")
 ```
 
-Pada kesempatan kali ini kita akan mendalami terkait Hierarchical Clustering serta aplikasinya untuk pengolahan data.
+Pada kesempatan kali ini kita akan mendalami terkait **Hierarchical Clustering** serta aplikasinya untuk pengolahan data.
 
 # Hierarchical Clustering
 
 ## Approach
 
-Secara umum, hierarchical clustering dibagi menjadi dua jenis yaitu **agglomerative** dan **divisive**[^3]. Kedua metode ini dibedakan berdasarkan pendekatan dalam melakukan pengelompokkan data hingga membentuk dendrogram, menggunakan bottom-up atau top-down manner.
+Secara umum, *hierarchical clustering* dibagi menjadi dua jenis yaitu **agglomerative** dan **divisive**[^3]. Kedua metode ini dibedakan berdasarkan pendekatan dalam melakukan pengelompokkan data hingga membentuk dendrogram, menggunakan *bottom-up* atau *top-down manner*.
 
 1. **Agglomerative Clustering** 
 
-Agglomerative clustering biasa disebut juga sebagai agglomerative nesting (**AGNES**) dimana cara kerja dalam melakukan pengelompokan data menggunakan **bottom-up manner**. Prosesnya dimulai dengan menganggap setiap data sebagai 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja, lalu pada tahap selanjutnya dua cluster yang memiliki kemiripan akan dikelompokkan menjadi 1 cluster yang lebih besar (nodes). Proses ini akan dilakukan terus menerus hingga semua data menjadi satu cluster besar (root). 
+*Agglomerative clustering* biasa disebut juga sebagai agglomerative nesting (**AGNES**) dimana cara kerja dalam melakukan pengelompokan data menggunakan **bottom-up manner**. Prosesnya dimulai dengan menganggap setiap data sebagai satu cluster kecil (*leaf*) yang hanya memiliki satu anggota saja, lalu pada tahap selanjutnya dua cluster yang memiliki kemiripan akan dikelompokkan menjadi satu cluster yang lebih besar (*nodes*). Proses ini akan dilakukan terus menerus hingga semua data menjadi satu cluster besar (*root*). 
 
 2. **Divisive hierarchical clustering**
 
-Divisive hierarchical clustering biasa disebut juga sebagai divisive analysis (**DIANA**) dimana cara kerja dalam melakukan pengelompokan data menggunakan **top-down manner**. Prosesnya dimulai dengan menganggap satu set data sebagai satu cluster besar (root), lalu dalam setiap iterasinya setiap data yang memiliki karakteristik yang berbeda akan dipecah menjadi 2 cluster yang lebih kecil (nodes) dan proses akan terus berjalan hingga setiap data menjadi 1 cluster kecil (leaf) yang hanya memiliki 1 anggota saja.
+*Divisive hierarchical clustering* biasa disebut juga sebagai divisive analysis (**DIANA**) di mana cara kerja dalam melakukan pengelompokan data menggunakan **top-down manner**. Prosesnya dimulai dengan menganggap satu set data sebagai satu cluster besar (*root*), lalu dalam setiap iterasinya setiap data yang memiliki karakteristik yang berbeda akan dipecah menjadi dua cluster yang lebih kecil (*nodes*) dan proses akan terus berjalan hingga setiap data menjadi satu cluster kecil (*leaf*) yang hanya memiliki satu anggota saja.
 
-Berikut adalah illustrasi mengenai bagaimana agglomerative dan divisive clustering bekerja.
+Berikut adalah ilustrasi mengenai bagaimana agglomerative dan divisive clustering bekerja.
 
 ```{r, out.width = "80%", echo = FALSE, fig.align = "center"}
 knitr::include_graphics("image/agnes-vs-diana.png")
@@ -83,13 +83,13 @@ $$d_{xy} = \sqrt {\sum_{i=1}^{n}(x_i - y_i)^2}$$
 
 $$d_{xy} = \sum_{i=1}^{n} |{(x_i - y_i)}|$$
 
-Ada beberapa pengukuran (dis)similarity yang lain yang bisa digunakan yaitu menggunakan **correlation-based distance**. Correlation-based distance biasa digunakan ketika kita ingin mengetahui bentuk (dis)similarity pada suatu data yang bergerak "naik" atau "turun" secara bersamaan. Pengukuran (dis)similarity ini sering digunakan untuk melakukan analisis ekspresi gen atau dalam dunia marketing, ketika kita ingin melakukan customer segmentation berdasarkan kesamaan barang yang dibeli oleh pelanggan tanpa memperhatikan banyak barang yang mereka beli.
+Ada beberapa pengukuran (dis)similarity yang lain yang bisa digunakan yaitu menggunakan **correlation-based distance**. Correlation-based distance biasa digunakan ketika kita ingin mengetahui bentuk (dis)similarity pada suatu data yang bergerak "naik" atau "turun" secara bersamaan. Pengukuran (dis)similarity ini sering digunakan untuk melakukan analisis ekspresi gen atau dalam dunia marketing, ketika kita ingin melakukan *customer segmentation* berdasarkan kesamaan barang yang dibeli oleh pelanggan tanpa memperhatikan banyak barang yang mereka beli.
 
-Euclidean distance dan manhattan distance cenderung memiliki konsep yang berkebalikan dengan correlation-based distance, data yang akan dikelompokkan bersama merupakan data yang memiliki karakteristik nilai yang sama, entah sama besarnya atau sama kecilnya. Pengukuran ini biasa digunakan pada kasus customer segmentation yang memperhatikan banyaknya pembelian dari pelanggan, segmentasi daerah yang memiliki kasus COVID tinggi/rendah, dan lain sebagainya[^4]. 
+*Euclidean distance* dan *manhattan distance* cenderung memiliki konsep yang berkebalikan dengan correlation-based distance, data yang akan dikelompokkan bersama merupakan data yang memiliki karakteristik nilai yang sama, entah sama besarnya atau sama kecilnya. Pengukuran ini biasa digunakan pada kasus *customer segmentation* yang memperhatikan banyaknya pembelian dari pelanggan, segmentasi daerah yang memiliki kasus COVID tinggi/rendah, dan lain sebagainya[^4]. 
 
 Pada R, kita dapat menggunakan fungsi `dist()` untuk menghitung (dis)similarity antar data. Secara default, fungsi `dist()` akan menghitung *euclidean distance* antar data. 
 
-Selanjutnya, nilai (dis)similarity antar data ini akan dibentuk menjadi **distance matrix**. Kemudian, distance matrix tersebut akan diolah untuk penyusunan dendrogram.
+Selanjutnya, nilai (dis)similarity antar data ini akan dibentuk menjadi **distance matrix**. Kemudian, *distance matrix* tersebut akan diolah untuk penyusunan dendrogram.
 
 ## Linkage Method
 
@@ -103,7 +103,7 @@ Dalam hierarchical clustering, selain menghitung (dis)similarity antar data, dip
 
 ### Complete/Maximum Linkage
 
-Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda (**pairwise distances**). Jarak paling tinggi (maximum distance) akan menjadi ukuran (dis)similarity antar cluster. Kemudian, dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Hal ini membuat dendrogram yang terbentuk menjadi lebih terpisah antar clusternya (terbentuk cluster yang "compact").
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda (**pairwise distances**). Jarak paling tinggi (*maximum distance*) akan menjadi ukuran (dis)similarity antar cluster. Kemudian, dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Hal ini membuat dendrogram yang terbentuk menjadi lebih terpisah antar clusternya (terbentuk cluster yang "compact").
 
 Berikut formula jarak antar cluster menggunakan complete linkage:
 
@@ -117,7 +117,7 @@ di mana:
 
 ### Single/Minimum Linkage
 
-Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Jarak paling kecil (minimum distance) akan menjadi ukuran (dis)similarity antar cluster. Dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Hal ini membuat dendrogram yang terbentuk menjadi lebih "loose" atau berdekatan antar clusternya.
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Jarak paling kecil (*minimum distance*) akan menjadi ukuran (dis)similarity antar cluster. Dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Hal ini membuat dendrogram yang terbentuk menjadi lebih "loose" atau berdekatan antar clusternya.
 
 Berikut formula jarak antar cluster menggunakan single linkage:
 
@@ -125,7 +125,7 @@ $$d_{12} = \min_{ij} d(X_i, Y_j)$$
 
 ### Average Linkage
 
-Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda pairwise distances. Kemudian, dihitung rata-rata jarak dari pairwise distance tersebut dan nilai tersebut akan menjadi ukuran (dis)similarity antar cluster. Dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Umumnya metode ini akan menghasilkan cluster yang tidak terlalu "loose" maupun "compact".
+Pengukuran (dis)similarity atau jarak antar cluster dilakukan dengan mengukur terlebih dahulu jarak antar tiap observasi dari cluster yang berbeda *pairwise distances*. Kemudian, dihitung rata-rata jarak dari *pairwise distance* tersebut dan nilai tersebut akan menjadi ukuran (dis)similarity antar cluster. Dendrogram akan terbentuk dari cluster-cluster yang memiliki (dis)similarity paling kecil. Umumnya metode ini akan menghasilkan cluster yang tidak terlalu "loose" maupun "compact".
 
 Berikut formula jarak antar cluster menggunakan average linkage:
 
@@ -141,7 +141,7 @@ $$d_{12} = d(\bar X, \bar Y)$$
 
 ### Ward's Minimum Variance
 
-Pada metode ini, di tiap iterasinya akan dibentuk cluster-cluster yang kemudian dihitung nilai within sum of square tiap cluster (WSS). WSS dapat diartikan sebagai jumlah dari jarak tiap observasi ke nilai tengah cluster. Cluster-cluster yang menghasilkan within sum of square terkecil akan diambil kemudian digabungkan hingga membentuk satu dendrogram utuh.
+Pada metode ini, di tiap iterasinya akan dibentuk cluster-cluster yang kemudian dihitung nilai *within sum of square* tiap cluster (WSS). WSS dapat diartikan sebagai jumlah dari jarak tiap observasi ke nilai tengah cluster. Cluster-cluster yang menghasilkan within sum of square terkecil akan diambil kemudian digabungkan hingga membentuk satu dendrogram utuh.
 
 Berikut adalah ilustrasi untuk kelima jenis linkage di atas[^5]:
 
@@ -159,9 +159,9 @@ Setelah menghasilkan dendrogram dari hierarchical clustering, sudah sepatutnya k
 knitr::include_graphics("image/dendrogram.jpg")
 ```
 
-Dendrogram sejatinya merupakan struktur yang menggambarkan kemiripan antar data. Tiap data pada awalnya diletakan di suatu level dasar dimana tiap data berdiri sendiri sebagai satu cluster tunggal. Pada contoh di atas, tiap instrumen musik merupakan 1 cluster tunggal di bagian dasar dendrogram. 
+Dendrogram sejatinya merupakan struktur yang menggambarkan kemiripan antar data. Tiap data pada awalnya diletakan di suatu level dasar dimana tiap data berdiri sendiri sebagai satu cluster tunggal. Pada contoh di atas, tiap instrumen musik merupakan satu cluster tunggal di bagian dasar dendrogram. 
 
-Kemudian, data-data terdekat akan digabungkan menjadi 1 cluster dan dihubungkan dengan suatu garis. Contohnya cluster instrumen "piccolo" & "flute" dan cluster instrumen "basoon" & "clarinet". Garis tersebut dimulai dari titik data dan bersatu di titik tertentu. 
+Kemudian, data-data terdekat akan digabungkan menjadi satu cluster dan dihubungkan dengan suatu garis. Contohnya cluster instrumen "piccolo" & "flute" dan cluster instrumen "basoon" & "clarinet". Garis tersebut dimulai dari titik data dan bersatu di titik tertentu. 
 
 **Panjang garis antar data (dihitung tegak lurus dari titik data hingga titik kedua garis bersatu) mewakilkan nilai (dis)similarity antar data**. Disini kita bisa menyimpulkan bahwa "piccolo" dengan "flute" memiliki kedekatan yang lebih tinggi dibandingkan "basoon" dengan "clarinet". Kita juga bisa mengetahui bahwa "flute" memiliki kedekatan yang lebih tinggi dengan "clarinet" dibandingkan dengan "trumpet". Hal ini karena "flute" dan "clarinet" memiliki panjang garis antar data yang lebih pendek dibandingkan antara "flute" dan "trumpet".
 
@@ -214,6 +214,7 @@ Pertama, kita load terlebih dahulu data yang akan digunakan.
 ```{r}
 head(USArrests)
 ```
+
 ## Preparasi Data
 
 Sebelum membuat clustering, kita perlu menyiapkan dataset yang digunakan. Dari tampilan data sebelumnya, kita telah mengetahui bahwa tipe data pada tiap kolom sudah tepat/sesuai konteks kolomnya. Perlu diperhatikan bahwa, analisis clustering didasari oleh analisis jarak, sehingga dibutuhkan variable dengan tipe **numerik**. Variabel dengan tipe kategorik tidak terlalu bagus untuk dimasukkan pada analisis clustering. Pada dateset kita, semua variable bertipe numerik sehingga cocok untuk analisis clustering. 
