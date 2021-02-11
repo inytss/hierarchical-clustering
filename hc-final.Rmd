@@ -1,7 +1,8 @@
 ---
 title: "Introduction to Hierarchical Clustering"
+subtitle: "Agglomerative Clustering"
 author: "Nabiilah Ardini Fauziyyah dan Inayatus Sholikhah"
-date: "`r format(Sys.Date(), '%d, %e %B %Y')`"
+date: "`r format(Sys.Date(), '%a, %e %B %Y')`"
 output: 
   html_document:
     toc: true
